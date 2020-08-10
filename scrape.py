@@ -4,6 +4,7 @@ from copy import deepcopy
 from datetime import datetime
 import csv
 import pickle
+import time
 
 
 ### Connects to Twitter via a Developer App
@@ -25,11 +26,14 @@ def grabLatestTweet():
 ### starts up the scraper
 def startScraper(**kwargs):
     global mostRecentTweet
-    pickle = kwargs.pop('pickle', False)
-    if not pickle:
+    print("Starting up the Scraper!")
+    mostRecentTweetHandler = kwargs.get('pickle')
+    ### Intended result is that if the pickle file isn't passed on or an error occurs it grabs the latest tweet and uses that to compare to His other tweets (This program isn't meant to be started and stopped constantly)
+    try:
+        mostRecentTweet = pickle.load(mostRecentTweetHandler)
+    except pickle.PickleError:
         mostRecentTweet = deepcopy(grabLatestTweet())
-    else:
-        mostRecentTweet = pickle.load(open("lastestTweet.pickle", "rb"))
+    
     while True:
         if grabLatestTweet() != mostRecentTweet:
             mostRecentTweet = deepcopy(grabLatestTweet())
@@ -40,5 +44,5 @@ if __name__ == "__main__":
     try: 
         startScraper()
     except KeyboardInterrupt:
-        print("Program closing, pickling Chris's most recent tweet")
+        print("Program closing, pickling Chris's most recent tweet.")
         pickle.dump(mostRecentTweet, open("latestTweet.pickle", "wb"))
