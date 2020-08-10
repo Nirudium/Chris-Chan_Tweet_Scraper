@@ -14,9 +14,9 @@ api = tweepy.API(auth)
 
 ### Writes to a csv file (Should be openable in Excel for easy access and management) 
 def writeToArchive(text, dateOfWriting):
-    with open("cwctweets-" + datetime.today().strftime('%Y-%m-%d') + ".csv") as cwcTweets:
+    with open('archive/' + "cwctweets-" + datetime.today().strftime('%Y-%m-%d') + ".csv") as cwcTweets:
         cwcWriter = csv.writer(cwcTweets, delimiter=' ', quotechar=',', quoting=csv.QUOTE_MINIMAL)
-        cwcWriter.writerow([text] + [dateOfWriting.strftime('%Y-%m-%d')])
+        cwcWriter.writerow([text, dateOfWriting.strftime('%Y-%m-%d')])
 
 ### Wrapper function to make it more human readable
 def grabLatestTweet():
@@ -33,8 +33,8 @@ def startScraper(**kwargs):
         mostRecentTweet = pickle.load(mostRecentTweetHandler)
     except pickle.PickleError:
         mostRecentTweet = deepcopy(grabLatestTweet())
-    
     while True:
+        time.sleep(5)
         if grabLatestTweet() != mostRecentTweet:
             mostRecentTweet = deepcopy(grabLatestTweet())
             writeToArchive(mostRecentTweet.text, mostRecentTweet.created_at)
