@@ -27,7 +27,7 @@ def grabLatestTweet():
 def startScraper(**kwargs):
     global mostRecentTweet
     print("Starting up the Scraper!")
-    mostRecentTweetHandler = kwargs.get('pickle')
+    mostRecentTweetHandler = kwargs.get('pickleFile')
     ### Intended result is that if the pickle file isn't passed on or an error occurs it grabs the latest tweet and uses that to compare to His other tweets (This program isn't meant to be started and stopped constantly)
     try:
         mostRecentTweet = pickle.load(mostRecentTweetHandler)
@@ -42,7 +42,7 @@ def startScraper(**kwargs):
 
 if __name__ == "__main__":
     try: 
-        startScraper()
+        startScraper(pickleFile = open("latestTweet.pickle", "rb"))
     except KeyboardInterrupt:
         print("Program closing, pickling Chris's most recent tweet.")
         pickle.dump(mostRecentTweet, open("latestTweet.pickle", "wb"))
