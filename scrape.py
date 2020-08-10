@@ -3,6 +3,7 @@ from configscrape import __DATA__, CWCUSERID
 from copy import deepcopy
 from datetime import datetime
 import csv
+import pickle
 
 
 ### Connects to Twitter via a Developer App
@@ -22,9 +23,22 @@ def grabLatestTweet():
     return latestTweet
 
 ### starts up the scraper
-def startScraper():
-    mostRecentTweet = deepcopy(grabLatestTweet())
+def startScraper(**kwargs):
+    global mostRecentTweet
+    pickle = kwargs.pop('pickle', False)
+    if not pickle:
+        mostRecentTweet = deepcopy(grabLatestTweet())
+    else:
+        mostRecentTweet = pickle.load(open("lastestTweet.pickle", "rb"))
     while True:
         if grabLatestTweet() != mostRecentTweet:
             mostRecentTweet = deepcopy(grabLatestTweet())
             writeToArchive(mostRecentTweet.text, mostRecentTweet.created_at)
+            print('Just archived this tweet! \n`{}` \n'.format(mostRecentTweet.text))
+
+if __name__ == "__main__":
+    try: 
+        startScraper()
+    except KeyboardInterrupt:
+        print("Program closing, pickling Chris's most recent tweet")
+        pickle.dump(mostRecentTweet, open("latestTweet.pickle", "wb"))
