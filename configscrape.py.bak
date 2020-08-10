@@ -1,0 +1,7 @@
+__DATA__ = dict(consumer_key=None,
+             consumer_secret=None,
+             access_token=None,
+             access_token_secret=None
+             )
+
+CWCUSERID = 1094336853434687489
