@@ -14,7 +14,7 @@ api = tweepy.API(auth)
 
 ### Writes to a csv file (Should be openable in Excel for easy access and management) 
 def writeToArchive(text, dateOfWriting):
-    with open('archive/' + "cwctweets-" + datetime.today().strftime('%Y-%m-%d') + ".csv") as cwcTweets:
+    with open(f"archive/cwctweets-{datetime.today().strftime('%Y-%m-%d')}.csv") as cwcTweets:
         cwcWriter = csv.writer(cwcTweets, delimiter=' ', quotechar=',', quoting=csv.QUOTE_MINIMAL)
         cwcWriter.writerow([text, dateOfWriting.strftime('%Y-%m-%d')])
 
@@ -38,7 +38,7 @@ def startScraper(**kwargs):
         if grabLatestTweet() != mostRecentTweet:
             mostRecentTweet = deepcopy(grabLatestTweet())
             writeToArchive(mostRecentTweet.text, mostRecentTweet.created_at)
-            print('Just archived this tweet! \n`{}` \n'.format(mostRecentTweet.text))
+            print(f'Just archived this tweet! \n`{mostRecentTweet.text}` \n')
 
 if __name__ == "__main__":
     try: 
